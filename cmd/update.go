@@ -1,25 +1,36 @@
 package cmd
 
-// import (
-// 	"fmt"
-// 	"strconv"
+import (
+	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 
-// 	"todo.go/service"
-// 	"todo.go/utils"
-// )
+	"todo.go/service"
+	"todo.go/utils"
+)
 
-// func HandleUpdate(filename string, args []string) {
-// 	if len(args) < 3 {
-// 		fmt.Println("Usage: update <id> <desc>")
-// 		fmt.Println("Example Usage : todo update 1 \"Buy groceries and cook dinner\"")
-// 		return
-// 	}
+func HandleUpdate(filename string, args []string) {
+	if len(args) < 3 {
+		fmt.Println("No such command exist")
+		return
+	}
 
-// 	// id := args[1]
-// 	// desc := args[2]
+	id, err := strconv.Atoi(args[1])
+	utils.PrintErr(err)
+	desc := strings.Join(args[2:], " ")
 
-// 	// ID, err := strconv.Atoi(id)
-// 	// utils.PrintErr(err)
+	err = service.UpdateTask(filename, desc, id)
+	if err != nil {
+		if errors.Is(err, service.ErrTaskNotFound) {
+			fmt.Println("Invalid Task Id")
+			return
+		} else {
+			utils.PrintErr(err)
+		}
+		return
+	}
 
-// 	// service.UpdateTaskToJson(filename, desc, ID)
-// }
+	fmt.Printf("task updated successfully (ID: %d)\n", id)
+
+}

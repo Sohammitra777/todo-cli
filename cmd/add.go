@@ -9,7 +9,8 @@ import (
 
 func HandleAdd(filename string, args []string) {
 	if len(args) < 2 {
-		fmt.Println("Usage: todo add <value>")
+		fmt.Println("Invalid text format")
+		fmt.Println("Usage: todo add <text>")
 		fmt.Println("Example Usage : todo add \"Buy Groceries\"")
 		return
 	}
