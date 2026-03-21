@@ -1,25 +1,39 @@
 package main
 
 import (
-	"time"
-	"todo.go/types"
-	"todo.go/utils"
+	"fmt"
+	"os"
+
+	"todo.go/cmd"
+	"todo.go/repo"
 )
 
 func main() {
 	filename := "task.json"
-	utils.CheckAndCreateStorageFile(filename)
+	commands := [4]string{"list", "add", "update", "delete"}
+	repo.CheckAndCreateStorageFile(filename)
 
-	task := types.Task{
-		Id:        1,
-		Desc:      "Learn Go",
-		Status:    types.StatusNotDone,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+	args := os.Args[1:]
+
+	if len(args) < 1 {
+		fmt.Println("Use -help to determine the working of the cli")
+		return
 	}
 
-	var tasks []types.Task
-	tasks = append(tasks, task)
-	utils.SaveToJson(filename, tasks)
+	command := args[0]
+	switch command {
+	case commands[0]:
 
+	case commands[1]:
+		cmd.HandleAdd(filename, args)
+
+	case commands[2]:
+		// cmd.HandleUpdate(filename, args)
+
+	case commands[3]:
+
+	default:
+		fmt.Println("Use -help to determine the working of the cli")
+
+	}
 }

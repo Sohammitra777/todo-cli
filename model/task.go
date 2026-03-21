@@ -1,4 +1,4 @@
-package types
+package model
 
 import "time"
 
@@ -6,12 +6,12 @@ type Status string
 
 const (
 	StatusDone       Status = "done"
-	StatusInProgress Status = "inProgress"
-	StatusNotDone    Status = "NotDone"
+	StatusInProgress Status = "In Progress"
+	StatusNotDone    Status = "Not Done"
 )
 
 type Task struct {
-	Id        int       `json:"id"`
+	ID        int       `json:"id"`
 	Desc      string    `json:"desc"`
 	Status    Status    `json:"status"`
 	CreatedAt time.Time `json:"createdAt"`
