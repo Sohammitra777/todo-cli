@@ -10,7 +10,6 @@ import (
 
 func main() {
 	filename := "task.json"
-	commands := [4]string{"list", "add", "update", "delete"}
 	repo.CheckAndCreateStorageFile(filename)
 
 	args := os.Args[1:]
@@ -20,17 +19,16 @@ func main() {
 		return
 	}
 
-	command := args[0]
-	switch command {
-	case commands[0]:
+	switch args[0] {
+	case "list":
 		cmd.HandleList(filename, args)
-	case commands[1]:
+	case "add":
 		cmd.HandleAdd(filename, args)
 
-	case commands[2]:
+	case "update":
 		cmd.HandleUpdate(filename, args)
 
-	case commands[3]:
+	case "delete":
 		cmd.HandleDelete(filename, args)
 	default:
 		fmt.Println("No such command exists")

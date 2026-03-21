@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"todo.go/cmd/list"
 	"todo.go/service"
 	"todo.go/utils"
 )
@@ -17,6 +18,16 @@ func HandleList(filename string, args []string) {
 		return
 	}
 
-	fmt.Println("No such command exist")
+	switch args[1] {
+	case "todo":
+		list.HandleListTodo(filename)
+	case "in-progress":
+		list.HandleListInProgress(filename)
+	case "done":
+		list.HandleListDone(filename)
+	default:
+		fmt.Println("No such subcommand exist")
+
+	}
 
 }

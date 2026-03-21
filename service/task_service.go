@@ -20,6 +20,57 @@ func ListTask(filename string) ([]model.Task, error) {
 	return tasks, nil
 }
 
+func TaskListTodo(filename string) ([]model.Task, error) {
+
+	var todoTasks []model.Task
+	tasks, err := repo.GetTasks(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, t := range tasks {
+		if t.Status == model.StatusNotDone {
+			todoTasks = append(todoTasks, t)
+		}
+	}
+
+	return todoTasks, nil
+}
+
+func TaskListInProgress(filename string) ([]model.Task, error) {
+
+	var todoTasks []model.Task
+	tasks, err := repo.GetTasks(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, t := range tasks {
+		if t.Status == model.StatusInProgress {
+			todoTasks = append(todoTasks, t)
+		}
+	}
+
+	return todoTasks, nil
+}
+
+func TaskListDone(filename string) ([]model.Task, error) {
+
+	var todoTasks []model.Task
+	tasks, err := repo.GetTasks(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, t := range tasks {
+		if t.Status == model.StatusDone {
+			todoTasks = append(todoTasks, t)
+		}
+	}
+
+	return todoTasks, nil
+}
+
 func AddTask(filename string, desc string) (int, error) {
 	task := model.Task{
 		Desc:      desc,
