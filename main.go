@@ -3,15 +3,12 @@ package main
 import (
 	"fmt"
 	"os"
-
 	"todo.go/cmd"
 	"todo.go/repo"
+	"todo.go/service"
 )
 
 func main() {
-	filename := "task.json"
-	repo.CheckAndCreateStorageFile(filename)
-
 	args := os.Args[1:]
 
 	if len(args) == 0 {
@@ -19,17 +16,25 @@ func main() {
 		return
 	}
 
+	repo := repo.NewTaskRepo("data/task.json")
+	err := repo.CheckAndCreateStorageFile()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	s := service.NewTaskService(repo)
+
 	switch args[0] {
 	case "list":
-		cmd.HandleList(filename, args)
+		cmd.HandleList(s, args)
 	case "add":
-		cmd.HandleAdd(filename, args)
+		cmd.HandleAdd(s, args)
 	case "update":
-		cmd.HandleUpdate(filename, args)
+		cmd.HandleUpdate(s, args)
 	case "delete":
-		cmd.HandleDelete(filename, args)
+		cmd.HandleDelete(s, args)
 	case "mark":
-		cmd.HandleMark(filename, args)
+		cmd.HandleMark(s, args)
 	default:
 		fmt.Println("No such command exists")
 	}

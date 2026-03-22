@@ -4,21 +4,31 @@ import (
 	"encoding/json"
 	"os"
 	"todo.go/model"
-	"todo.go/utils"
 )
 
-func CheckAndCreateStorageFile(file string) {
-	if _, err := os.Stat(file); os.IsNotExist(err) {
-		f, err := os.Create(file)
-		utils.PrintErr(err)
-		defer f.Close()
-	}
+type TaskRepo struct {
+	filename string
 }
 
-func GetTasks(filename string) ([]model.Task, error) {
+func NewTaskRepo(filename string) *TaskRepo {
+	return &TaskRepo{filename: filename}
+}
+
+func (r *TaskRepo) CheckAndCreateStorageFile() error {
+	if _, err := os.Stat(r.filename); os.IsNotExist(err) {
+		f, err := os.Create(r.filename)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+	}
+	return nil
+}
+
+func (r *TaskRepo) GetTasks() ([]model.Task, error) {
 	var tasks []model.Task
 
-	file, err := os.ReadFile(filename)
+	file, err := os.ReadFile(r.filename)
 	if err != nil {
 		return nil, err
 	}
@@ -33,13 +43,13 @@ func GetTasks(filename string) ([]model.Task, error) {
 	return tasks, nil
 }
 
-func StoreFile(filename string, tasks []model.Task) error {
+func (r *TaskRepo) StoreFile(tasks []model.Task) error {
 	data, err := json.MarshalIndent(tasks, "", "    ")
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(filename, data, 0644)
+	err = os.WriteFile(r.filename, data, 0644)
 	if err != nil {
 		return err
 	}

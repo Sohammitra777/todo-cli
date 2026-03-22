@@ -1,23 +1,51 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"strings"
+
 	"todo.go/service"
-	"todo.go/utils"
 )
 
-func HandleAdd(filename string, args []string) {
+func parseAddArgs(args []string) (string, error) {
 	if len(args) < 2 {
-		fmt.Println("Invalid text format")
-		fmt.Println("Usage: todo add <text>")
-		fmt.Println("Example Usage : todo add \"Buy Groceries\"")
-		return
+		return "", errors.New("invalid arguments")
 	}
 
 	desc := strings.Join(args[1:], " ")
-	ID, err := service.AddTask(filename, desc)
-	utils.PrintErr(err)
+	return desc, nil
+}
+
+func printAddUsage() {
+	fmt.Println("\033[1mUSAGE\033[0m")
+	fmt.Println(" todo add <text>")
+	fmt.Println("\033[1mEXAMPLE\033[0m")
+	fmt.Println(" todo add \"Buy Groceries\"")
+}
+
+func handleAddError(err error) {
+	if err != nil {
+		fmt.Println("\033[3mError:\033[0m", err)
+		return
+	}
+
+}
+
+func HandleAdd(s *service.TaskService, args []string) {
+	desc, err := parseAddArgs(args)
+	if err != nil {
+		fmt.Println("\033[3mError:\033[0m", err)
+		printAddUsage()
+		return
+	}
+
+	ID, err := s.AddTask(desc)
+	if err != nil {
+		handleAddError(err)
+		return
+	}
 
 	fmt.Printf("Task added successfully (ID : %d)\n", ID)
+
 }

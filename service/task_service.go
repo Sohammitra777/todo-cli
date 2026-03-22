@@ -9,10 +9,18 @@ import (
 	"todo.go/utils"
 )
 
+type TaskService struct {
+	repo *repo.TaskRepo
+}
+
+func NewTaskService(r *repo.TaskRepo) *TaskService {
+	return &TaskService{repo: r}
+}
+
 var ErrTaskNotFound = errors.New("task not found")
 
-func ListTask(filename string) ([]model.Task, error) {
-	tasks, err := repo.GetTasks(filename)
+func (s *TaskService) ListTask() ([]model.Task, error) {
+	tasks, err := s.repo.GetTasks()
 	if err != nil {
 		return nil, err
 	}
@@ -20,10 +28,10 @@ func ListTask(filename string) ([]model.Task, error) {
 	return tasks, nil
 }
 
-func ListByStatus(filename string, status model.Status) ([]model.Task, error) {
+func (s *TaskService) ListByStatus(status model.Status) ([]model.Task, error) {
 
 	var todoTasks []model.Task
-	tasks, err := repo.GetTasks(filename)
+	tasks, err := s.repo.GetTasks()
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +45,7 @@ func ListByStatus(filename string, status model.Status) ([]model.Task, error) {
 	return todoTasks, nil
 }
 
-func AddTask(filename string, desc string) (int, error) {
+func (s *TaskService) AddTask(desc string) (int, error) {
 	task := model.Task{
 		Desc:      desc,
 		Status:    model.StatusNotDone,
@@ -45,7 +53,7 @@ func AddTask(filename string, desc string) (int, error) {
 		CreatedAt: time.Now(),
 	}
 
-	tasks, err := repo.GetTasks(filename)
+	tasks, err := s.repo.GetTasks()
 	if err != nil {
 		return 0, err
 	}
@@ -53,7 +61,7 @@ func AddTask(filename string, desc string) (int, error) {
 	task.ID = utils.GetNextId(tasks)
 	tasks = append(tasks, task)
 
-	err = repo.StoreFile(filename, tasks)
+	err = s.repo.StoreFile(tasks)
 	if err != nil {
 		return 0, err
 	}
@@ -61,8 +69,8 @@ func AddTask(filename string, desc string) (int, error) {
 	return task.ID, nil
 }
 
-func UpdateTask(filename, desc string, id int) error {
-	tasks, err := repo.GetTasks(filename)
+func (s *TaskService) UpdateTask(desc string, id int) error {
+	tasks, err := s.repo.GetTasks()
 	if err != nil {
 		return err
 	}
@@ -81,7 +89,7 @@ func UpdateTask(filename, desc string, id int) error {
 		return ErrTaskNotFound
 	}
 
-	err = repo.StoreFile(filename, tasks)
+	err = s.repo.StoreFile(tasks)
 	if err != nil {
 		return err
 	}
@@ -89,8 +97,8 @@ func UpdateTask(filename, desc string, id int) error {
 	return nil
 }
 
-func MarkTaskStatusById(filename string, status model.Status, id int) error {
-	tasks, err := repo.GetTasks(filename)
+func (s *TaskService) MarkTaskStatusById(status model.Status, id int) error {
+	tasks, err := s.repo.GetTasks()
 	if err != nil {
 		return err
 	}
@@ -109,7 +117,7 @@ func MarkTaskStatusById(filename string, status model.Status, id int) error {
 		return ErrTaskNotFound
 	}
 
-	err = repo.StoreFile(filename, tasks)
+	err = s.repo.StoreFile(tasks)
 	if err != nil {
 		return err
 	}
@@ -117,10 +125,10 @@ func MarkTaskStatusById(filename string, status model.Status, id int) error {
 	return nil
 }
 
-func DeleteTask(filename string, id int) (model.Task, error) {
+func (s *TaskService) DeleteTask(id int) (model.Task, error) {
 
 	var task model.Task
-	tasks, err := repo.GetTasks(filename)
+	tasks, err := s.repo.GetTasks()
 	if err != nil {
 		return task, err
 	}
@@ -139,7 +147,7 @@ func DeleteTask(filename string, id int) (model.Task, error) {
 	task = tasks[idx]
 	tasks = append(tasks[:idx], tasks[idx+1:]...)
 
-	err = repo.StoreFile(filename, tasks)
+	err = s.repo.StoreFile(tasks)
 	if err != nil {
 		return task, err
 	}

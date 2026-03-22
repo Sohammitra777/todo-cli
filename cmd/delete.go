@@ -5,41 +5,63 @@ import (
 	"fmt"
 	"strconv"
 
+	"todo.go/model"
 	"todo.go/service"
 	"todo.go/utils"
 )
 
-func HandleDelete(filename string, args []string) {
-
-	if len(args) > 2 {
-		fmt.Println("No such command exist")
-		return
-	}
-
-	if len(args) < 2 {
-		fmt.Println("Invalid format")
-		fmt.Println("\033[1mUSAGE\033[0m")
-		fmt.Println(" todo delete <ID>")
-		fmt.Println("\033[1mEXAMPLE USAGE\033[0m")
-		fmt.Println(" todo delete 1")
-		return
+func parseDeleteArgs(args []string) (int, error) {
+	if len(args) != 2 {
+		return 0, errors.New("invalid arguments")
 	}
 
 	id, err := strconv.Atoi(args[1])
 	if err != nil {
-		fmt.Println("Invlid ID format")
-		return
-	}
+		return 0, errors.New("invalid ID format")
 
-	task, err := service.DeleteTask(filename, id)
+	}
+	return id, nil
+}
+
+func printDeleteUsage() {
+	fmt.Println("\033[1mUSAGE\033[0m")
+	fmt.Println("  todo delete <ID>")
+	fmt.Println("\033[1mEXAMPLE\033[0m")
+	fmt.Println("  todo delete 1")
+}
+
+func handleDeleteError(err error) {
 	if err != nil {
 		if errors.Is(err, service.ErrTaskNotFound) {
 			fmt.Println("Task not found")
 		} else {
-			utils.PrintErr(err)
+			fmt.Println("Error:", err)
 		}
+	}
+}
+
+func printDeletedTask(task model.Task) {
+	fmt.Println("Task delete successfully")
+	fmt.Println("------deleted task------")
+	fmt.Printf("ID: %d\n", task.ID)
+	fmt.Printf("%s\n", utils.CapitalizeWords(task.Desc))
+	fmt.Printf("Status : %s\n", task.Status)
+}
+
+func HandleDelete(s *service.TaskService, args []string) {
+
+	id, err := parseDeleteArgs(args)
+	if err != nil {
+		fmt.Println("\033[3mError:\033[0m", err)
+		printDeleteUsage()
 		return
 	}
 
-	utils.PrintDeletedTask(task)
+	task, err := s.DeleteTask(id)
+	if err != nil {
+		handleDeleteError(err)
+		return
+	}
+
+	printDeletedTask(task)
 }

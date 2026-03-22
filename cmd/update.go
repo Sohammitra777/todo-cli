@@ -7,31 +7,52 @@ import (
 	"strings"
 
 	"todo.go/service"
-	"todo.go/utils"
 )
 
-func HandleUpdate(filename string, args []string) {
+func parseUpdateArgs(args []string) (int, string, error) {
 	if len(args) < 3 {
-		fmt.Println("No such command exist")
-		return
+		return 0, "", errors.New("invalid arguments")
 	}
 
 	id, err := strconv.Atoi(args[1])
 	if err != nil {
-		fmt.Println("Invlid ID format")
-		return
+		return 0, "", errors.New("invalid ID format")
 	}
-	
-	desc := strings.Join(args[2:], " ")
 
-	err = service.UpdateTask(filename, desc, id)
+	return id, strings.Join(args[2:], " "), nil
+}
+
+func printUpdateUsage() {
+	fmt.Println("\033[1mUSAGE\033[0m")
+	fmt.Println("  todo update <ID> <text>")
+
+	fmt.Println("\033[1mEXAMPLE\033[0m")
+	fmt.Println("  todo update 1 buy gorceries")
+}
+
+func handleUpdateError(err error) {
 	if err != nil {
 		if errors.Is(err, service.ErrTaskNotFound) {
 			fmt.Println("Invalid Task Id")
 			return
 		} else {
-			utils.PrintErr(err)
+			fmt.Println("Error:", err)
 		}
+		return
+	}
+}
+
+func HandleUpdate(s *service.TaskService, args []string) {
+	id, desc, err := parseUpdateArgs(args)
+	if err != nil {
+		fmt.Println("\033[3mError:\033[0m", err)
+		printUpdateUsage()
+		return
+	}
+
+	err = s.UpdateTask(desc, id)
+	if err != nil {
+		handleUpdateError(err)
 		return
 	}
 

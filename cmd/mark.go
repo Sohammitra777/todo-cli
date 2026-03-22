@@ -1,22 +1,48 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
 	"todo.go/model"
 	"todo.go/service"
-	"todo.go/utils"
 )
 
-func HandleMark(filename string, args []string) {
-	if len(args) > 3 || len(args) < 2 {
-		fmt.Println("Usage todo mark <ID> <status>")
-		fmt.Println()
-		fmt.Println("Status commands: ")
-		fmt.Println(" todo")
-		fmt.Println(" in-progress")
-		fmt.Println(" done")
+func printMarkUsage() {
+	fmt.Println("\033[1mUSAGE\033[0m")
+	fmt.Println("  todo mark <ID> <status>")
+
+	fmt.Println("\033[1mSTATUS\033[0m")
+	fmt.Println("  todo")
+	fmt.Println("  in-progress")
+	fmt.Println("  done")
+}
+
+func parseMarkArgs(args []string) (int, error) {
+	if len(args) == 2 {
+		return 0, errors.New("invalid status")
+	}
+
+	if len(args) != 3 {
+		return 0, errors.New("invlid arguments")
+	}
+
+	id, err := strconv.Atoi(args[1])
+	if err != nil {
+		return 0, errors.New("Invalid ID format")
+	}
+
+	return id, nil
+}
+
+func HandleMark(s *service.TaskService, args []string) {
+
+	id, err := parseMarkArgs(args)
+	if err != nil {
+		fmt.Println("\033[3mError:\033[0m", err)
+		printMarkUsage()
+		return
 	}
 
 	markFilters := map[string]model.Status{
@@ -24,20 +50,20 @@ func HandleMark(filename string, args []string) {
 		"in-progress": model.StatusInProgress,
 		"done":        model.StatusDone,
 	}
+	status, ok := markFilters[args[2]]
+	if !ok {
+		fmt.Print("\033[3mError:\033[0m")
+		fmt.Println("invalid status")
+		printMarkUsage()
+		return
+	}
 
-	id, err:= strconv.Atoi(args[1])
+	err = s.MarkTaskStatusById(status, id)
 	if err != nil {
-		fmt.Println("Invalid ID format")
-		return
-	}
-	
-	if  status, ok := markFilters[args[2]]; ok {
-		err := service.MarkTaskStatusById(filename, status, id)
-		utils.PrintErr(err)
-
-		fmt.Println("Status updated successfully"); 
+		fmt.Println("\033[3mError:\033[0m", err)
 		return
 	}
 
-	fmt.Println("No such command exist")
+	fmt.Println("Status updated successfully")
+
 }
