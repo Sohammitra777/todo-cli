@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"todo.go/service"
+	"github.com/Sohammitra777/taskflow/service"
 )
 
 func parseAddArgs(args []string) (string, error) {

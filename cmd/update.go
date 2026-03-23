@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	"todo.go/service"
+	"github.com/Sohammitra777/taskflow/service"
 )
 
 func parseUpdateArgs(args []string) (int, string, error) {

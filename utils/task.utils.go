@@ -3,7 +3,7 @@ package utils
 import (
 	"strings"
 	"unicode"
-	"todo.go/model"
+	"github.com/Sohammitra777/taskflow/model"
 )
 
 func GetNextId(tasks []model.Task) int {

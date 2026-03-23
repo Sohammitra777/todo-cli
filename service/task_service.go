@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
-	"todo.go/model"
-	"todo.go/repo"
-	"todo.go/utils"
+	"github.com/Sohammitra777/taskflow/model"
+	"github.com/Sohammitra777/taskflow/repo"
+	"github.com/Sohammitra777/taskflow/utils"
 )
 
 type TaskService struct {

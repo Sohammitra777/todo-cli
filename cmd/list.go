@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"todo.go/model"
-	"todo.go/service"
-	"todo.go/utils"
+	"github.com/Sohammitra777/taskflow/model"
+	"github.com/Sohammitra777/taskflow/service"
+	"github.com/Sohammitra777/taskflow/utils"
 )
 
 func printListUsage() {

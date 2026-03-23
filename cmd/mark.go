@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"todo.go/model"
-	"todo.go/service"
+	"github.com/Sohammitra777/taskflow/model"
+	"github.com/Sohammitra777/taskflow/service"
 )
 
 func printMarkUsage() {

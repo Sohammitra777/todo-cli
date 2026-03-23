@@ -3,7 +3,8 @@ package repo
 import (
 	"encoding/json"
 	"os"
-	"todo.go/model"
+
+	"github.com/Sohammitra777/taskflow/model"
 )
 
 type TaskRepo struct {
