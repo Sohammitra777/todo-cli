@@ -11,6 +11,12 @@ CLI (cmd) → Service → Repository → JSON storage
 
 Each command flows through these layers, keeping responsibilities separated and easy to maintain.
 
+A sample solution for the Task Tracker CLI challenge from roadmap.sh.
+
+This project demonstrates a fully type-safe command-line application built in Go, capable of managing tasks (add, update, delete, mark status, and list) with persistent JSON storage.
+
+Challenge: https://roadmap.sh/projects/task-tracker
+
 ---
 
 ## ⚙️ Setup
