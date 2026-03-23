@@ -1,7 +1,3 @@
-# 📍 ROUTES + SEQUENCE DIAGRAMS
-
----
-
 ## ➕ ADD TASK
 
 ### Usage
@@ -42,5 +38,3 @@ sequenceDiagram
         CMD-->>CLI: success message
     end
 ```
-
----

@@ -37,7 +37,3 @@ sequenceDiagram
     Service-->>CMD: filtered tasks
     CMD-->>CLI: print list
 ```
-
----
-
-## ✏️ UPDATE TASK

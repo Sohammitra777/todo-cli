@@ -44,5 +44,3 @@ sequenceDiagram
         end
     end
 ```
-
----

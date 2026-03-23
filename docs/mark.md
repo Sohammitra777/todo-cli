@@ -39,39 +39,3 @@ sequenceDiagram
         CMD-->>CLI: success message
     end
 ```
-
----
-
-## 🆘 HELP
-
-### Usage
-
-```bash
-todo help
-```
-
-### Description
-
-Displays CLI usage and command reference.
-
-### Sequence Diagram
-
-```mermaid
-sequenceDiagram
-    participant CLI
-    participant CMD
-
-    CLI->>CMD: HandleHelp()
-    CMD-->>CLI: print help info
-```
-
----
-
-# 🧩 Architecture Notes
-
-### Layers
-
-- **cmd/** → CLI handlers (input parsing, output)
-- **service/** → business logic
-- **repo/** → file storage (JSON)
-- **utils/** → helpers
